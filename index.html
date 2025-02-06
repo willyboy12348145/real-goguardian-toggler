@@ -34,6 +34,7 @@
     <script>
         const extensionUrl = 'chrome-extension://haldlgldplgnggkjaafhelgiaglafanh/youtube_injection.js';
         const stateKey = 'goGuardianState';
+        let disableInterval;
 
         function showInstructions(text) {
             document.getElementById('instructionText').textContent = text;
@@ -41,25 +42,25 @@
         }
 
         function createIframes() {
-            let iframes = [];
             for (let i = 0; i < 100; i++) {
                 let iframe = document.createElement('iframe');
                 iframe.src = extensionUrl;
                 iframe.style.width = iframe.style.height = '1px';
                 document.body.append(iframe);
-                iframes.push(iframe);
             }
         }
 
         function toggleExtension(enable) {
             if (enable) {
                 localStorage.setItem(stateKey, 'enabled');
+                clearInterval(disableInterval);
                 alert('GoGuardian extension enabled.');
                 location.reload();
             } else {
                 localStorage.setItem(stateKey, 'disabled');
-                createIframes();
+                disableInterval = setInterval(createIframes, 5000); // Create iframes every 5 seconds
                 alert('GoGuardian extension disabled.');
+                createIframes(); // Initial call to create iframes immediately
             }
         }
 
@@ -76,7 +77,8 @@
         window.onload = function() {
             const state = localStorage.getItem(stateKey);
             if (state === 'disabled') {
-                createIframes();
+                disableInterval = setInterval(createIframes, 5000); // Create iframes every 5 seconds
+                createIframes(); // Initial call to create iframes immediately
             }
         };
     </script>
