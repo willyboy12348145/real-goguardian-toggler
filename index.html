@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggle GoGuardian Extension</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+        }
+        .instructions {
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Toggle GoGuardian Extension</h1>
+    <button id="enableBtn">Enable GoGuardian</button>
+    <button id="disableBtn">Disable GoGuardian</button>
+
+    <div id="instructions" class="instructions">
+        <h2>Instructions</h2>
+        <p id="instructionText"></p>
+    </div>
+
+    <script>
+        document.getElementById('enableBtn').addEventListener('click', function() {
+            showInstructions('To enable the GoGuardian extension, follow these steps:\n1. Open your browser settings.\n2. Go to Extensions.\n3. Find the GoGuardian extension and click the toggle button to enable it.');
+        });
+
+        document.getElementById('disableBtn').addEventListener('click', function() {
+            showInstructions('To disable the GoGuardian extension, follow these steps:\n1. Open your browser settings.\n2. Go to Extensions.\n3. Find the GoGuardian extension and click the toggle button to disable it.');
+        });
+
+        function showInstructions(text) {
+            document.getElementById('instructionText').textContent = text;
+            document.getElementById('instructions').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
