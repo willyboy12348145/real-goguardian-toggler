@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html lang="en"><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -33,40 +32,38 @@
     </div>
 
     <script>
-        const extensionUrl = 'chrome-extension://haldlgldplgnggkjaafhelgiaglafanh/youtube_injection.js';
+        const goGuardianExtensionId = 'haldlgldplgnggkjaafhelgiaglafanh'; //haldlgldplgnggkjaafhelgiaglafanh
         const stateKey = 'goGuardianState';
-        let disableInterval;
+        let disableTimeout;
 
         function showInstructions(text) {
             document.getElementById('instructionText').textContent = text;
             document.getElementById('instructions').style.display = 'block';
         }
 
-        function createIframes() {
-            for (let i = 0; i < 100; i++) {
-                let iframe = document.createElement('iframe');
-                iframe.src = extensionUrl;
-                iframe.style.width = iframe.style.height = '1px';
-                document.body.append(iframe);
-            }
-        }
-
         function toggleExtension(enable) {
             if (enable) {
                 localStorage.setItem(stateKey, 'enabled');
-                clearInterval(disableInterval);
-                alert('GoGuardian extension enabled.');
-                location.reload();
+                clearTimeout(disableTimeout);
+                chrome.management.setEnabled(haldlgldplgnggkjaafhelgiaglafanh, true, () => {
+                    alert('GoGuardian extension enabled.');
+                    location.reload();
+                });
             } else {
                 localStorage.setItem(stateKey, 'disabled');
-                setTimeout(() => {
-                    if (localStorage.getItem(stateKey) === 'disabled') {
-                        disableInterval = setInterval(createIframes, 300000); // Create iframes every 5 minutes (300000 ms)
-                        setTimeout(() => clearInterval(disableInterval), 86400000); // Stop after 24 hours (86400000 ms)
-                        createIframes(); // Initial call to create iframes immediately
-                    }
-                }, 600000); // Start creating iframes after a 10 minutes delay
-                alert('GoGuardian extension disabled.');
+                chrome.management.setEnabled(haldlgldplgnggkjaafhelgiaglafanh, false, () => {
+                    alert('GoGuardian extension disabled.');
+                    setTimeout(() => {
+                        if (localStorage.getItem(stateKey) === 'disabled') {
+                            disableTimeout = setTimeout(() => {
+                                chrome.management.setEnabled(haldlgldplgnggkjaafhelgiaglafanh, true, () => {
+                                    alert('GoGuardian extension re-enabled after 24 hours.');
+                                    location.reload();
+                                });
+                            }, 86400000); // 24 hours in milliseconds
+                        }
+                    }, 600000); // 10 minutes delay
+                });
             }
         }
 
@@ -85,11 +82,14 @@
             if (state === 'disabled') {
                 setTimeout(() => {
                     if (localStorage.getItem(stateKey) === 'disabled') {
-                        disableInterval = setInterval(createIframes, 300000); // Create iframes every 5 minutes (300000 ms)
-                        setTimeout(() => clearInterval(disableInterval), 86400000); // Stop after 24 hours (86400000 ms)
-                        createIframes(); // Initial call to create iframes immediately
+                        disableTimeout = setTimeout(() => {
+                            chrome.management.setEnabled(goGuardianExtensionId, true, () => {
+                                alert('GoGuardian extension re-enabled after 24 hours.');
+                                location.reload();
+                            });
+                        }, 86400000); // 24 hours in milliseconds
                     }
-                }, 600000); // Start creating iframes after a 10 minutes delay
+                }, 600000); // 10 minutes delay
             }
         };
     </script>
