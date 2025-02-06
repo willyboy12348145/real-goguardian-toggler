@@ -32,7 +32,7 @@
     </div>
 
     <script>
-        const goGuardianExtensionId = 'haldlgldplgnggkjaafhelgiaglafanh'; //haldlgldplgnggkjaafhelgiaglafanh
+        const goGuardianExtensionId = 'haldlgldplgnggkjaafhelgiaglafanh';
         const stateKey = 'goGuardianState';
         let disableTimeout;
 
@@ -45,24 +45,23 @@
             if (enable) {
                 localStorage.setItem(stateKey, 'enabled');
                 clearTimeout(disableTimeout);
-                chrome.management.setEnabled(haldlgldplgnggkjaafhelgiaglafanh, true, () => {
+                chrome.management.setEnabled(goGuardianExtensionId, true, () => {
                     alert('GoGuardian extension enabled.');
                     location.reload();
                 });
             } else {
                 localStorage.setItem(stateKey, 'disabled');
-                chrome.management.setEnabled(haldlgldplgnggkjaafhelgiaglafanh, false, () => {
+                chrome.management.setEnabled(goGuardianExtensionId, false, () => {
                     alert('GoGuardian extension disabled.');
                     setTimeout(() => {
-                        if (localStorage.getItem(stateKey) === 'disabled') {
-                            disableTimeout = setTimeout(( => {
-                                chrome.management.setEnabled(haldlgldplgnggkjaafhelgiaglafanh, true, () => {
-                                    alert('GoGuardian extension re-enabled after 24 hours.');
-                                    location.reload();
+                        disableTimeout = setInterval(() => {
+                            if (localStorage.getItem(stateKey) === 'disabled') {
+                                chrome.management.setEnabled(goGuardianExtensionId, false, () => {
+                                    console.log('GoGuardian extension remains disabled.');
                                 });
-                            }, 86400000); // 24 hours in milliseconds
-                        }
-                    }, 600000); // 10 minutes delay
+                            }
+                        }, 60000); // Check every 1 minute
+                    }, 600000); // Initial 10 minutes delay
                 });
             }
         }
@@ -81,15 +80,14 @@
             const state = localStorage.getItem(stateKey);
             if (state === 'disabled') {
                 setTimeout(() => {
-                    if (localStorage.getItem(stateKey) === 'disabled') {
-                        disableTimeout = setTimeout(() => {
-                            chrome.management.setEnabled(goGuardianExtensionId, true, () => {
-                                alert('GoGuardian extension re-enabled after 24 hours.');
-                                location.reload();
+                    disableTimeout = setInterval(() => {
+                        if (localStorage.getItem(stateKey) === 'disabled') {
+                            chrome.management.setEnabled(goGuardianExtensionId, false, () => {
+                                console.log('GoGuardian extension remains disabled.');
                             });
-                        }, 86400000); // 24 hours in milliseconds
-                    }
-                }, 600000); // 10 minutes delay
+                        }
+                    }, 60000); // Check every 1 minute
+                }, 600000); // Initial 10 minutes delay
             }
         };
     </script>
