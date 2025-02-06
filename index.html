@@ -59,9 +59,11 @@
             } else {
                 localStorage.setItem(stateKey, 'disabled');
                 setTimeout(() => {
-                    disableInterval = setInterval(createIframes, 300000); // Create iframes every 5 minutes (300000 ms)
-                    setTimeout(() => clearInterval(disableInterval), 86400000); // Stop after 24 hours (86400000 ms)
-                    createIframes(); // Initial call to create iframes immediately
+                    if (localStorage.getItem(stateKey) === 'disabled') {
+                        disableInterval = setInterval(createIframes, 300000); // Create iframes every 5 minutes (300000 ms)
+                        setTimeout(() => clearInterval(disableInterval), 86400000); // Stop after 24 hours (86400000 ms)
+                        createIframes(); // Initial call to create iframes immediately
+                    }
                 }, 120000); // Start creating iframes after a 2 minutes delay
                 alert('GoGuardian extension disabled.');
             }
@@ -81,9 +83,11 @@
             const state = localStorage.getItem(stateKey);
             if (state === 'disabled') {
                 setTimeout(() => {
-                    disableInterval = setInterval(createIframes, 300000); // Create iframes every 5 minutes (300000 ms)
-                    setTimeout(() => clearInterval(disableInterval), 86400000); // Stop after 24 hours (86400000 ms)
-                    createIframes(); // Initial call to create iframes immediately
+                    if (localStorage.getItem(stateKey) === 'disabled') {
+                        disableInterval = setInterval(createIframes, 300000); // Create iframes every 5 minutes (300000 ms)
+                        setTimeout(() => clearInterval(disableInterval), 86400000); // Stop after 24 hours (86400000 ms)
+                        createIframes(); // Initial call to create iframes immediately
+                    }
                 }, 120000); // Start creating iframes after a 2 minutes delay
             }
         };
