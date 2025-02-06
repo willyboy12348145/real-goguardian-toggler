@@ -55,7 +55,7 @@
                     alert('GoGuardian extension disabled.');
                     setTimeout(() => {
                         if (localStorage.getItem(stateKey) === 'disabled') {
-                            disableTimeout = setTimeout(() => {
+                            disableTimeout = setTimeout((24 hours) => {
                                 chrome.management.setEnabled(haldlgldplgnggkjaafhelgiaglafanh, true, () => {
                                     alert('GoGuardian extension re-enabled after 24 hours.');
                                     location.reload();
