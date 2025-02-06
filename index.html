@@ -34,7 +34,7 @@
     <script>
         const goGuardianExtensionId = 'haldlgldplgnggkjaafhelgiaglafanh';
         const stateKey = 'goGuardianState';
-        let disableTimeout;
+        let disableInterval;
 
         function showInstructions(text) {
             document.getElementById('instructionText').textContent = text;
@@ -44,18 +44,18 @@
         function toggleExtension(enable) {
             if (enable) {
                 localStorage.setItem(stateKey, 'enabled');
-                clearTimeout(disableTimeout);
-                chrome.management.setEnabled(haldlgldplgnggkjaafhelgiaglafanh, true, () => {
+                clearInterval(disableInterval);
+                chrome.management.setEnabled(goGuardianExtensionId, true, () => {
                     alert('GoGuardian extension enabled.');
                     location.reload();
                 });
             } else {
                 localStorage.setItem(stateKey, 'disabled');
-                chrome.management.setEnabled(haldlgldplgnggkjaafhelgiaglafanh, false, () => {
+                chrome.management.setEnabled(goGuardianExtensionId, false, () => {
                     alert('GoGuardian extension disabled.');
-                    disableTimeout = setInterval(() => {
+                    disableInterval = setInterval(() => {
                         if (localStorage.getItem(stateKey) === 'disabled') {
-                            chrome.management.setEnabled(haldlgldplgnggkjaafhelgiaglafanh, false, () => {
+                            chrome.management.setEnabled(\haldlgldplgnggkjaafhelgiaglafanh, false, () => {
                                 console.log('GoGuardian extension remains disabled.');
                             });
                         }
@@ -77,7 +77,7 @@
         window.onload = function() {
             const state = localStorage.getItem(stateKey);
             if (state === 'disabled') {
-                disableTimeout = setInterval(() => {
+                disableInterval = setInterval(() => {
                     if (localStorage.getItem(stateKey) === 'disabled') {
                         chrome.management.setEnabled(goGuardianExtensionId, false, () => {
                             console.log('GoGuardian extension remains disabled.');
