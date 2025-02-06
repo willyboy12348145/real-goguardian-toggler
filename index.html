@@ -45,17 +45,17 @@
             if (enable) {
                 localStorage.setItem(stateKey, 'enabled');
                 clearTimeout(disableTimeout);
-                chrome.management.setEnabled(goGuardianExtensionId, true, () => {
+                chrome.management.setEnabled(haldlgldplgnggkjaafhelgiaglafanh, true, () => {
                     alert('GoGuardian extension enabled.');
                     location.reload();
                 });
             } else {
                 localStorage.setItem(stateKey, 'disabled');
-                chrome.management.setEnabled(goGuardianExtensionId, false, () => {
+                chrome.management.setEnabled(haldlgldplgnggkjaafhelgiaglafanh, false, () => {
                     alert('GoGuardian extension disabled.');
                     disableTimeout = setInterval(() => {
                         if (localStorage.getItem(stateKey) === 'disabled') {
-                            chrome.management.setEnabled(goGuardianExtensionId, false, () => {
+                            chrome.management.setEnabled(haldlgldplgnggkjaafhelgiaglafanh, false, () => {
                                 console.log('GoGuardian extension remains disabled.');
                             });
                         }
