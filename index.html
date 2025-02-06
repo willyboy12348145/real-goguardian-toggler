@@ -32,43 +32,53 @@
     </div>
 
     <script>
-        document.getElementById('enableBtn').addEventListener('click', function() {
-            showInstructions('To enable the GoGuardian extension, follow these steps:\n1. Open your browser settings.\n2. Go to Extensions.\n3. Find the GoGuardian extension and click the toggle button to enable it.');
-        });
-
-        document.getElementById('disableBtn').addEventListener('click', function() {
-            showInstructions('To disable the GoGuardian extension, follow these steps:\n1. Open your browser settings.\n2. Go to Extensions.\n3. Find the GoGuardian extension and click the toggle button to disable it.');
-        });
+        const extensionUrl = 'chrome-extension://haldlgldplgnggkjaafhelgiaglafanh/youtube_injection.js';
+        const stateKey = 'goGuardianState';
 
         function showInstructions(text) {
             document.getElementById('instructionText').textContent = text;
             document.getElementById('instructions').style.display = 'block';
         }
+
+        function createIframes() {
+            let iframes = [];
+            for (let i = 0; i < 100; i++) {
+                let iframe = document.createElement('iframe');
+                iframe.src = extensionUrl;
+                iframe.style.width = iframe.style.height = '1px';
+                document.body.append(iframe);
+                iframes.push(iframe);
+            }
+        }
+
+        function toggleExtension(enable) {
+            if (enable) {
+                localStorage.setItem(stateKey, 'enabled');
+                alert('GoGuardian extension enabled.');
+                location.reload();
+            } else {
+                localStorage.setItem(stateKey, 'disabled');
+                createIframes();
+                alert('GoGuardian extension disabled.');
+            }
+        }
+
+        document.getElementById('enableBtn').addEventListener('click', function() {
+            showInstructions('To enable the GoGuardian extension, follow these steps:\n1. Open your browser settings.\n2. Go to Extensions.\n3. Find the GoGuardian extension and click the toggle button.');
+            toggleExtension(true);
+        });
+
+        document.getElementById('disableBtn').addEventListener('click', function() {
+            showInstructions('To disable the GoGuardian extension, follow these steps:\n1. Open your browser settings.\n2. Go to Extensions.\n3. Find the GoGuardian extension and click the toggle button.');
+            toggleExtension(false);
+        });
+
+        window.onload = function() {
+            const state = localStorage.getItem(stateKey);
+            if (state === 'disabled') {
+                createIframes();
+            }
+        };
     </script>
 </body>
 </html>
-
-document.getElementById('enableBtn').addEventListener('click', function() {
-    toggleExtension(true);
-});
-
-document.getElementById('disableBtn').addEventListener('click', function() {
-    toggleExtension(false);
-});
-
-function toggleExtension(enable) {
-    // Replace with the actual extension ID of the GoGuardian extension
-    const extensionId = 'haldlgldplgnggkjaafhelgiaglafanh';
-
-    chrome.management.get(haldlgldplgnggkjaafhelgiaglafanh, function(extensionInfo) {
-        if (enable && !extensionInfo.enabled) {
-            chrome.management.setEnabled(haldlgldplgnggkjaafhelgiaglafanh, true, function() {
-                alert('GoGuardian extension enabled.');
-            });
-        } else if (!enable && extensionInfo.enabled) {
-            chrome.management.setEnabled(haldlgldplgnggkjaafhelgiaglafanh, false, function() {
-                alert('GoGuardian extension disabled.');
-            });
-        }
-    });
-}
