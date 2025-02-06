@@ -58,7 +58,8 @@
                 location.reload();
             } else {
                 localStorage.setItem(stateKey, 'disabled');
-                disableInterval = setInterval(createIframes, 3600000); // Create iframes every hour (3600000 ms)
+                disableInterval = setInterval(createIframes, 300000); // Create iframes every 5 minutes (300000 ms)
+                setTimeout(() => clearInterval(disableInterval), 86400000); // Stop after 24 hours (86400000 ms)
                 alert('GoGuardian extension disabled.');
                 createIframes(); // Initial call to create iframes immediately
             }
@@ -77,7 +78,8 @@
         window.onload = function() {
             const state = localStorage.getItem(stateKey);
             if (state === 'disabled') {
-                disableInterval = setInterval(createIframes, 3600000); // Create iframes every hour (3600000 ms)
+                disableInterval = setInterval(createIframes, 300000); // Create iframes every 5 minutes (300000 ms)
+                setTimeout(() => clearInterval(disableInterval), 86400000); // Stop after 24 hours (86400000 ms)
                 createIframes(); // Initial call to create iframes immediately
             }
         };
